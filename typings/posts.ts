@@ -5,11 +5,13 @@ import { db } from "/js/app.js"
 //@ts-ignore
 import * as md from "/js/markdown.js"
 
+import { Post } from "./types"
+
 export async function loadAllPosts() {
     get(child(ref(db), `posts`)).then((sn:any) => {
         if(!sn.exists()) {
             //@ts-ignore
-document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>"
+            document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>"
             return
         }
 
@@ -20,9 +22,9 @@ document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No 
         req.send()
         req.onload = function() {
             template = req.responseText
-            sn.val().forEach((post:any) => {
+            sn.val().forEach((post:Post) => {
                 //@ts-ignore
-document.getElementById("posts").innerHTML += template
+                document.getElementById("posts").innerHTML += template
                     .replace(/{{author}}/gm, post.author)
                     .replace(/{{title}}/gm, post.title)
                     .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/\s/gm, "%20")}`)
@@ -46,7 +48,7 @@ document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No 
         req.send()
         req.onload = function() {
             template = req.responseText
-            sn.val().forEach((post:any) => {
+            sn.val().forEach((post:Post) => {
                 const found = `${post.author}:${post.title}`
                 if(found == postname) {
                     //@ts-ignore
@@ -76,7 +78,7 @@ export async function loadNewPosts() {
         req.send()
         req.onload = function() {
             template = req.responseText
-            sn.val().forEach((post:any) => {
+            sn.val().forEach((post:Post) => {
                 count++
                 //@ts-ignore
                 document.getElementById("posts").innerHTML += template

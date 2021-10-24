@@ -30,7 +30,8 @@ window.getCurrentUser = function () {
             if (user) {
                 resolve({
                     name: user.displayName,
-                    email: user.email
+                    email: user.email,
+                    uid: user.uid
                 });
             }
         });

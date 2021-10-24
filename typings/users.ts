@@ -2,6 +2,7 @@
 import {  createUserWithEmailAndPassword,  signInWithEmailAndPassword, onAuthStateChanged,  updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"
 //@ts-ignore
 import { auth } from "/js/app.js"
+import { User } from "./types"
 
 export const createUser = function(username:string, email:string, password:string) {
     return new Promise((resolve, reject) => {
@@ -19,13 +20,14 @@ export const createUser = function(username:string, email:string, password:strin
 //@ts-ignore
 window.getCurrentUser = function() {
     return new Promise((resolve, reject) => {
-        onAuthStateChanged(auth, (user:any) => {
+        onAuthStateChanged(auth, (user:User) => {
             if(user) {
                 resolve({
                     name: user.displayName,
-                    email: user.email
+                    email: user.email,
+                    uid: user.uid
                 })
-            } 
+            }
         })
     })
 }
@@ -54,7 +56,7 @@ window.signInUser = function(email, password) {
 //@ts-ignore
 window.isSignedIn = async function() {
     return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user:any) => {
+        onAuthStateChanged(auth, (user:User) => {
             if(user) resolve(true)
             else resolve(false)
         })
@@ -63,10 +65,10 @@ window.isSignedIn = async function() {
 
 document.body.onload = function() {
     //@ts-ignore
-window.isSignedIn().then(isLoggedin => {
+    window.isSignedIn().then(isLoggedin => {
         if(document.getElementById("links") != null) {
             if(isLoggedin) {
-                onAuthStateChanged(auth, (user:any) => {
+                onAuthStateChanged(auth, (user:User) => {
                     console.log("Logged in as ", user.displayName)
                     //@ts-ignore
                     document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a href='javascript:window.signOutUser()'>Logout</a> <a style='float:right;margin-right:40px' href='/posts/create'>Create a post</a>"
