@@ -12,18 +12,22 @@ function getJSON(url) {
         req.onload = function() {
             if(req.status >= 200 && req.status < 400) {
                 resolve(JSON.parse(req.responseText))
+            } else {
+                reject(`Fetch ${url} failed`)
             }
         }
+
+        req.send()
     })
 }
 
-document.onload = function() {
-    const footer = document.createElement("footer")
-    const info = document.createElement("p")
-    getJSON("/package.json").then((data) => {
-        info.innerHTML = `<code>V${data.version}</code>`
-    })
+console.log("Index.js started!")
+const footer = document.createElement("footer")
+const info = document.createElement("p")
+
+getJSON(`/package.json`).then((data) => {
+    info.innerHTML = `<code>V${data.version}</code><a style="float:right;margin-right:20px;" href="${data.repository}">View on GitHub</a>`
     footer.className = "pageInfo"
     footer.appendChild(info)
     document.body.appendChild(footer)
-}
+}).catch((err) => console.error(err))
