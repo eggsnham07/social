@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/styles.css">
+        <style>
+            body {
+                text-align: center;
+            }
+        </style>
+
+        <script type="module" src="/js/users.js"></script>
+    </head>
+    <body>
+        <h1 id="header1"></h1>
+        <small id="info"></small>
+        <form id="login">
+            <input class="formInput" type="email" placeholder="you@domain.com" id="email" required><br><br>
+            <input class="formInput" type="password" placeholder="SuperSecretPassword" id="password" required><br><br>
+            <input class="formInput" type="text" placeholder="Super Cool Username Here" id="username" required><br><br>
+            <input class="formInput" type="submit" value="Sign Up!">
+        </form>
+        <br>
+        <h3>Already have an account? <a href="/login/">Login!</a></h3>
+
+        <script type="module">
+
+            import { createUser } from "/js/users.js"
+            
+            document.getElementById("login").addEventListener("submit", (e) => {
+                const email = document.getElementById("email").value,
+                      password = document.getElementById("password").value,
+                      username = document.getElementById("username").value
+
+                e.preventDefault()
+                createUser(
+                    username, 
+                    email,
+                    password
+                ).then(res => {
+                    document.getElementById("info").innerText = res
+                })
+                .catch(err => {
+                    document.getElementById("info").innerText = err.split("/")[1].split(")")[0].replace(/-/gm, " ")
+                })
+            })
+        </script>
+    </body>
+</html>

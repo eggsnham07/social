@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/styles.css">
+        <script src="/js/posts.js" type="module"></script>
+        <script src="/js/users.js" type="module"></script>
+    </head>
+    <body>
+        <div class="nav top" id="navbar">
+            <h2 id="links"><a href="/">Home</a></h3>
+        </div>
+        
+        <main id="posts"></main>
+
+        <script type="module">
+            import { loadAllPosts, loadPost } from "/js/posts.js"
+            document.onload = loadAllPosts()
+
+            const view = new URL(location.href).searchParams.get("view")
+            if(view) {
+                loadPost(view.replace(/%20/gm, ' '))
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="/js/users.js" type="module"></script>
+
+        <link rel="stylesheet" href="/css/create.css">
+    </head>
+    <body>
+        <h1 id="mode"></h1>
+        <form id="create">
+            <input style="height: 26px;font-size:23px;" type="text" placeholder="Some cool title" id="title">
+            <p id="text=error"></p>
+            <br><br>
+            <textarea id="content"></textarea>
+            <br><br>
+            <input type="submit" value="Done!">
+        </form>
+        <br><br>
+        <div id="preview"></div>
+
+        <script type="module">
+            import * as md from "/js/markdown.js"
+            import { createPost } from "/js/posts.js"
+
+            isSignedIn().then(loggedIn => {
+                if(loggedIn == false) location.href = "/"
+            })
+
+            const mode = new URL(location.href).searchParams.get("mode") || "create"
+            const params = new URL(location.href).searchParams
+            var information
+
+            if(mode == "edit") {
+                information = {
+                    postName: params.get("edit").split(":")[1]
+                }
+            }
+
+            const title = document.getElementById("title")
+            const content = document.getElementById("content")
+
+            if(mode == "create") {
+                document.getElementById("create").addEventListener("submit", (e) => {
+                    if(String(title.value).includes(":")) {
+                        e.preventDefault()
+                        alert("Title cannot contain ':'")
+                    } else {
+                        e.preventDefault()
+
+                        getCurrentUser().then(data => {
+                            console.log(data)
+                            createPost(
+                                title.value,
+                                content.value,
+                                data.name
+                            )
+                        })
+                    }
+                })
+            }
+
+            else if(mode == "edit") {
+
+            }
+
+            content.addEventListener("input", (e) => {
+                document.getElementById("preview").innerHTML = md.parse(content.value)
+            })
+
+            title.addEventListener("input", (e) => {
+                if(String(title.value).includes(":")) {
+                    e.preventDefault()
+                    document.getElementById("text=error").innerText = "Titles cannot contain ':'"
+                } else {
+                    document.getElementById("text=error").innerText = ""
+                }
+            })
+        </script>
+    </body>
+</html>

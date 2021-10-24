@@ -1,0 +1,9 @@
+{
+  "name": "social.eggsnham.com",
+  "version": "1.2.7 Beta",
+  "main": "none",
+  "repository": "git@github.com:eggsnham07/eggsnham.com.git",
+  "author": "eggsnham07 <eggsnham07@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
