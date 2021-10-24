@@ -1,20 +1,24 @@
-const h1 = /^#\s(.*$)/gm;
-const h2 = /^##\s(.*$)/gm;
-const h3 = /^###\s(.*$)/gm;
-const h4 = /^####\s(.*$)/gm;
-const h5 = /^#####\s(.*$)/gm;
-const h6 = /^######\s(.*$)/gm;
-const code = /`(.*?)`/gm;
-const bq = /> (.*$)/gm;
-const link = /\[([^\]]+)\]\(([^\)]+)\)/gm;
-const italic = /\*(.*?)\*/;
-const bold = /\*\*(.*?)\*\*/gm;
-const ib = /\*\*\*(.*?)\*\*\*/gm;
-const li = /- (.*$)/gm;
-const dli = /- - (.*$)/gm;
+const h1 = /^#\s(.*$)/gm
+const h2 = /^##\s(.*$)/gm
+const h3 = /^###\s(.*$)/gm
+const h4 = /^####\s(.*$)/gm
+const h5 = /^#####\s(.*$)/gm
+const h6 = /^######\s(.*$)/gm
+
+const code = /`(.*?)`/gm
+const bq = /> (.*$)/gm
+
+const link = /\[([^\]]+)\]\(([^\)]+)\)/gm
+const italic = /\*(.*?)\*/
+const bold = /\*\*(.*?)\*\*/gm
+const ib = /\*\*\*(.*?)\*\*\*/gm
+
+const li = /- (.*$)/gm
+const dli = /- - (.*$)/gm
+
 /**
- *
- * @param {String} str
+ * 
+ * @param {String} str 
  */
 export function parse(str) {
     return str
@@ -32,5 +36,5 @@ export function parse(str) {
         .replace(ib, "<b><i>$1</i></b>")
         .replace(bold, "<b>$1</b>")
         .replace(italic, "<i>$1</i>")
-        .replace(bq, "<blockquote>$1</blockquote>");
+        .replace(bq, "<blockquote>$1</blockquote>")
 }

@@ -6,14 +6,15 @@
         <script src="/js/users.js" type="module"></script>
     </head>
     <body>
-        <div class="nav top" id="navbar">
-            <h2 id="links"><a href="/">Home</a></h3>
+        <div id="main">
+            <div class="nav top" id="navbar">
+                <h2 id="links"><a href="/">Home</a></h3>
+            </div>
+            <main id="posts"></main><br><br><br>
+            <footer style="text-align: center;">
+                <a href="/posts/">View More</a>
+            </footer>
         </div>
-        <main id="posts"></main><br><br><br>
-        <footer style="text-align: center;">
-            <a href="/posts/">View More</a>
-        </footer>
-
         <script type="module">
             import { loadNewPosts } from "/js/posts.js"
             loadNewPosts()

@@ -2,21 +2,22 @@
     Default tags first
 */
 html,body {
-    height: calc(100% - 120px);
+    height: calc(100%);
 }
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #eee;
     color: #333;
     padding-top: 120px;
+    margin: 0;
 }
 
 a {
-    color: #8d14ff;
+    color: #97008b;
 }
 
 a:visited {
-    color: #8d14ff;
+    color: #97008b;
 }
 
 blockquote {
@@ -31,7 +32,7 @@ blockquote {
 .nav {
     padding-right: 12px;
     padding-left: 12px;
-    width: 100%;
+    width: calc(100% - 24px);
     background-color: #333;
     color: #eee;
     height: 100px;
@@ -58,15 +59,21 @@ blockquote {
 }
 
 .pageInfo {
-    position:fixed;
-    left:0;
-    bottom:0;
-    width:100%;
+    max-height: 60px;
+    height: 60px;
+    width: calc(100% - 24px);
     background-color:#333;
     color:#eee;
     text-align:left;
-    padding-right:12px;
-    padding-left:12px;
+    padding: 12px;
+}
+
+.pageInfo a {
+    color: #39ff14;
+}
+
+.pageInfo a:visited {
+    color: #39ff14;
 }
 
 .space {
@@ -75,3 +82,8 @@ blockquote {
 /* 
     Now IDs
 */
+
+#main {
+    height: 100%;
+    width: 100%;
+}
