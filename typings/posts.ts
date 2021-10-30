@@ -139,3 +139,71 @@ export async function createPost(title:string, body:string, author:string) {
         }
     })
 }
+
+export async function updatePost(oldTitle:string, title:string, body:string, author:string) {
+    return new Promise((resolve, reject) => {
+        get(child(ref(db), "posts")).then((sn:any) => {
+            if(!sn.exists()) {
+                console.log("<h3 style='text-align:center;'>Could not find post... 😟</h3>")
+                return;
+            }
+
+            var count = 0
+            var isFound = false
+
+            sn.val().forEach((post:Post) => {
+                count++
+
+                const found = `${post.author}:${post.title}`
+                if(found == `${author}:${oldTitle}`) {
+                    set(child(ref(db), `posts/${count-1}`), {
+                        author: author,
+                        content: body,
+                        title: title
+                    })
+                    isFound = true
+                    resolve(200)
+                }
+
+                else if(found != `${author}:${oldTitle}` && count == sn.val().length && isFound == false) {      
+                    alert(`Could not edit post... 😟`)
+                    reject(404)
+                }
+            })
+        })
+    })
+}
+
+//@ts-ignore
+window.loadPostData = async function(author:string, title:string) {
+    return new Promise((resolve, reject) => {
+        get(child(ref(db), "posts")).then((sn:any) => {
+            if(!sn.exists()) {
+                console.log("<h3 style='text-align:center;'>Could not find post... 😟</h3>")
+                return;
+            }
+
+            var count = 0
+            var isFound = false
+
+            sn.val().forEach((post:Post) => {
+                count++
+
+                const found = `${post.author}:${post.title}`
+                if(found == `${author}:${title}`) {
+                    resolve({
+                        title: post.title,
+                        content: post.content,
+                        author: post.author
+                    })
+                    isFound = true
+                }
+
+                else if(found != `${author}:${title}` && count == sn.val().length && isFound == false) {      
+                    console.log(`Could not find post... 😟`)
+                    reject(404)
+                }
+            })
+        })
+    })
+}

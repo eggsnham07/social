@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <script src="/js/users.js" type="module"></script>
+        <script src="/js/posts.js" type="module"></script>
 
         <link rel="stylesheet" href="/css/create.css">
     </head>
@@ -22,21 +23,21 @@
 
         <script type="module">
             import * as md from "/js/markdown.js"
-            import { createPost } from "/js/posts.js"
+            import { createPost, updatePost } from "/js/posts.js"
 
             isSignedIn().then(loggedIn => {
                 if(loggedIn == false) location.href = "/"
             })
 
-            const mode = new URL(location.href).searchParams.get("mode") || "create"
-            const params = new URL(location.href).searchParams
-            var information
+            const mode = new URL(location.href).searchParams.get("edit") || "create"
+            console.log(mode)
 
-            if(mode == "edit") {
-                information = {
-                    postName: params.get("edit").split(":")[1]
-                }
-            }
+            const params = new URL(location.href).searchParams
+            var information = {}
+
+            getCurrentUser().then(data => {
+                information.currentUser = data.name
+            })
 
             const title = document.getElementById("title")
             const content = document.getElementById("content")
@@ -61,10 +62,38 @@
                         })
                     }
                 })
-            }
+            } else {
+                information.postName = params.get("edit").split(":")[1].replace(/%20/gm, ' ')
+                console.log(information)
 
-            else if(mode == "edit") {
+                getCurrentUser().then(user => {
+                    loadPostData(user.name, information.postName).then(post => {
+                        content.value = post.content
+                        title.value = information.postName
 
+                        document.getElementById("preview").innerHTML = md.parse(content.value)
+                    })
+                })
+
+                document.getElementById("create").addEventListener("submit", (e) => {
+                    if(String(title.value).includes(":") || String(title.value).includes("\"") || String(title.value).includes("'")) {
+                        e.preventDefault()
+                        alert("Title cannot contain : ' \" ")
+                    } else {
+                        e.preventDefault()
+
+                        getCurrentUser().then(data => {
+                            updatePost(
+                                information.postName,
+                                title.value,
+                                content.value,
+                                data.name
+                            ).then(() => {
+                                location.href = `/posts/?view=${data.name}:${title.value}`
+                            })
+                        })
+                    }
+                })
             }
 
             content.addEventListener("input", (e) => {
