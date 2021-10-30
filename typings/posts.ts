@@ -37,7 +37,7 @@ export async function loadPost(postname:string) {
     get(child(ref(db), "posts")).then((sn:any) => {
         if(!sn.exists()) {
             //@ts-ignore
-document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>"
+            document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>"
             return;
         }
 
@@ -52,10 +52,10 @@ document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No 
                 const found = `${post.author}:${post.title}`
                 if(found == postname) {
                     //@ts-ignore
-document.getElementById("posts").innerHTML = template
-                    .replace(/{{author}}/gm, post.author)
-                    .replace(/{{title}}/gm, post.title)
-                    .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                    document.getElementById("posts").innerHTML = template
+                        .replace(/{{author}}/gm, post.author)
+                        .replace(/{{title}}/gm, post.title)
+                        .replace(/{{content}}/gm, `${md.parse(post.content)}`)
                 }
             })
         }
