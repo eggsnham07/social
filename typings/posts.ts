@@ -48,7 +48,12 @@ export async function loadPost(postname:string) {
         req.send()
         req.onload = function() {
             template = req.responseText
+            var count = 0
+            var isFound = false
+
             sn.val().forEach((post:Post) => {
+                count++
+
                 const found = `${post.author}:${post.title}`
                 if(found == postname) {
                     //@ts-ignore
@@ -56,7 +61,13 @@ export async function loadPost(postname:string) {
                         .replace(/{{author}}/gm, post.author)
                         .replace(/{{title}}/gm, post.title)
                         .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                        .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
+                    isFound = true
                 }
+
+                else if(found != postname && count == sn.val().length && isFound == false) 
+                    //@ts-ignore
+                    document.getElementById("posts")?.innerHTML = `<h3 style='text-align:center;'>No posts found... 😟</h3>`
             })
         }
     })
@@ -65,47 +76,66 @@ export async function loadPost(postname:string) {
 export async function loadNewPosts() {
     get(child(ref(db), "posts")).then((sn:any) => {
         if(!sn.exists()) {
+            var mo = ""
             //@ts-ignore
-            document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>"
-            return;
-        }
-
-        var template = ""
-        var count = 0
-
-        const req = new XMLHttpRequest()
-        req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/post.html`)
-        req.send()
-        req.onload = function() {
-            template = req.responseText
-            sn.val().forEach((post:Post) => {
-                count++
+            window.getCurrentUser().then(user => {
                 //@ts-ignore
-                document.getElementById("posts").innerHTML += template
-                    .replace(/{{author}}/gm, post.author)
-                    .replace(/{{title}}/gm, post.title)
-                    .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/\s/gm, "%20")}`)
-                if(count >= 5) {
-                    return
-                }
+                document.getElementById("posts").style.textAlign = "center"
+
+                if(user.name) mo = "<a style='text-align:center;' href='/posts/create'>Make one!</a>"
+                //@ts-ignore
+                document.getElementById("posts").innerHTML = `<h3 style='text-align:center;'>No posts to show... 😟</h3>${mo}`
+                return;
+            }).catch((err:string) => {
+                //@ts-ignore
+                document.getElementById("posts").innerHTML = `<h3 style='text-align:center;'>No posts to show... 😟</h3>`
             })
+        } else {
+
+            var template = ""
+            var count = 0
+
+            const req = new XMLHttpRequest()
+            req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/post.html`)
+            req.send()
+            req.onload = function() {
+                template = req.responseText
+                sn.val().forEach((post:Post) => {
+                    count++
+                    if(count <= 2) {
+                        //@ts-ignore
+                        document.getElementById("posts").innerHTML += template
+                            .replace(/{{author}}/gm, post.author)
+                            .replace(/{{title}}/gm, post.title)
+                            .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/\s/gm, "%20")}`)
+                    }
+                    else if(count >= 2) {
+                        return
+                    }
+                })
+            }
         }
     })
 }
 
 export async function createPost(title:string, body:string, author:string) {
-    const newPost = [
-        {
-            author: author,
-            title: title,
-            content: body
-        }
-    ]
-    get(child(ref(db), "posts")).then((sn:any) => {
-        if(sn.exists()) {
-            const total = newPost.concat(sn.val())
-            console.log(total)
-            set(child(ref(db), "posts"), total)
+    return new Promise((resolve, reject) => {
+        const newPost = [
+            {
+                author: author,
+                title: title,
+                content: body
+            }
+        ]
+        try {
+            get(child(ref(db), "posts")).then((sn:any) => {
+                const total = newPost.concat(sn.val())
+                console.log(total)
+                set(child(ref(db), "posts"), total)
+                resolve(void(0))
+            })
+        } catch(error) {
+            reject(error)
         }
     })
 }

@@ -43,9 +43,9 @@
 
             if(mode == "create") {
                 document.getElementById("create").addEventListener("submit", (e) => {
-                    if(String(title.value).includes(":")) {
+                    if(String(title.value).includes(":") || String(title.value).includes("\"") || String(title.value).includes("'")) {
                         e.preventDefault()
-                        alert("Title cannot contain ':'")
+                        alert("Title cannot contain : ' \" ")
                     } else {
                         e.preventDefault()
 
@@ -55,7 +55,9 @@
                                 title.value,
                                 content.value,
                                 data.name
-                            )
+                            ).then(() => {
+                                location.href = `/posts/?view=${data.name}:${title.value}`
+                            })
                         })
                     }
                 })
@@ -70,9 +72,9 @@
             })
 
             title.addEventListener("input", (e) => {
-                if(String(title.value).includes(":")) {
+                if(String(title.value).includes(":") || String(title.value).includes("\"") || String(title.value).includes("'")) {
                     e.preventDefault()
-                    document.getElementById("text=error").innerText = "Titles cannot contain ':'"
+                    document.getElementById("text=error").innerHTML = "Titles cannot contain <code>\"</code> <code>'</code> or <code>:</code>"
                 } else {
                     document.getElementById("text=error").innerText = ""
                 }

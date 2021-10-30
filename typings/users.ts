@@ -27,6 +27,8 @@ window.getCurrentUser = function() {
                     email: user.email,
                     uid: user.uid
                 })
+            } else {
+                reject("Not Loggedin!")
             }
         })
     })

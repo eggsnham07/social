@@ -34,6 +34,9 @@ window.getCurrentUser = function () {
                     uid: user.uid
                 });
             }
+            else {
+                reject("Not Loggedin!");
+            }
         });
     });
 };

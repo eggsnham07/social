@@ -3,6 +3,9 @@
   "version": "1.2.8 Beta",
   "main": "none",
   "repository": "https://github.com/eggsnham07/social.git",
+  "scripts": {
+    "build": "tsc"
+  },
   "author": "eggsnham07 <eggsnham07@gmail.com>",
   "license": "MIT",
   "private": true

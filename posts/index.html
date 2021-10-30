@@ -16,13 +16,17 @@
         </div>
         <script type="module">
             import { loadAllPosts, loadPost } from "/js/posts.js"
-            document.onload = loadAllPosts()
 
-            const view = new URL(location.href).searchParams.get("view")
+            const params = new URL(location.href).searchParams
+            const view = params.get("view")
+            const deletepost = params.get("delete")
+
             if(view) {
                 loadPost(view.replace(/%20/gm, ' '))
+            } else {
+                document.onload = loadAllPosts()
             }
         </script>
-    <script type="module" src="/js/index.js"></script>
-</body>
+        <script type="module" src="/js/index.js"></script>
+    </body>
 </html>
