@@ -41,6 +41,25 @@ window.getCurrentUser = function () {
     });
 };
 //@ts-ignore
+export function getCurrentUser() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    resolve({
+                        name: user.displayName,
+                        email: user.email,
+                        uid: user.uid
+                    });
+                }
+                else {
+                    reject("Not Loggedin!");
+                }
+            });
+        });
+    });
+}
+//@ts-ignore
 window.signInUser = function (email, password) {
     return new Promise((resolve, reject) => {
         signInWithEmailAndPassword(auth, email, password)

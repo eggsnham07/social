@@ -4,6 +4,8 @@ import { ref, child, set, get } from "https://www.gstatic.com/firebasejs/9.1.3/f
 import { db } from "/js/app.js"
 //@ts-ignore
 import * as md from "/js/markdown.js"
+//@ts-ignore
+import { getCurrentUser } from "/js/users.js"
 
 import { Post } from "./types"
 
@@ -56,13 +58,35 @@ export async function loadPost(postname:string) {
 
                 const found = `${post.author}:${post.title}`
                 if(found == postname) {
-                    //@ts-ignore
-                    document.getElementById("posts").innerHTML = template
-                        .replace(/{{author}}/gm, post.author)
-                        .replace(/{{title}}/gm, post.title)
-                        .replace(/{{content}}/gm, `${md.parse(post.content)}`)
-                        .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
-                    isFound = true
+
+                    getCurrentUser().then((user:any) => {
+                        if(user.name != post.author) {
+                            //@ts-ignore
+                            document.getElementById("posts").innerHTML = template
+                                .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
+                                .replace(/{{author}}/gm, post.author)
+                                .replace(/{{title}}/gm, post.title)
+                                .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                                .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
+                        }
+                        else if(user.name == post.author) {
+                            //@ts-ignore
+                            document.getElementById("posts").innerHTML = template
+                                .replace(/{{author}}/gm, post.author)
+                                .replace(/{{title}}/gm, post.title)
+                                .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                                .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
+                        }
+                        isFound = true
+                    }).catch((err:string) => {
+                        //@ts-ignore
+                        document.getElementById("posts").innerHTML = template
+                            .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
+                            .replace(/{{author}}/gm, post.author)
+                            .replace(/{{title}}/gm, post.title)
+                            .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                            .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
+                    })
                 }
 
                 else if(found != postname && count == sn.val().length && isFound == false) 
