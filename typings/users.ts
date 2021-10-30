@@ -10,7 +10,7 @@ export const createUser = function(username:string, email:string, password:strin
             .then((cred:any) => {
                 localStorage.setItem("needsUpdate", "true")
                 localStorage.setItem("user-info", username.replace(/Official Developer/gm, ''))
-                resolve("User created!")
+                resolve("User created! Go to <a href='/login/'>login</a>")
             }).catch((err:Error) => {
                 reject(err.message)
             })

@@ -38,7 +38,7 @@
                     email,
                     password
                 ).then(res => {
-                    document.getElementById("info").innerText = res
+                    document.getElementById("info").innerHTML = res
                 })
                 .catch(err => {
                     document.getElementById("info").innerText = err.split("/")[1].split(")")[0].replace(/-/gm, " ")
