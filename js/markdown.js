@@ -7,6 +7,7 @@ const h6 = /^######\s(.*$)/gm;
 const code = /`(.*?)`/gm;
 const bq = /> (.*$)/gm;
 const link = /\[([^\]]+)\]\(([^\)]+)\)/gm;
+const image = /!\[([^\]]+)\]\(([^\)]+)\)/gm;
 const italic = /\*(.*?)\*/;
 const bold = /\*\*(.*?)\*\*/gm;
 const ib = /\*\*\*(.*?)\*\*\*/gm;
@@ -27,6 +28,7 @@ export function parse(str) {
         .replace(/\n\n/gm, "<br>")
         .replace(dli, "<li class=\'tab\'>$1</li>")
         .replace(li, "<li>$1</li>")
+        .replace(image, "<img src=\"$2\" alt=\"$1\">")
         .replace(link, "<a href=\"$2\">$1</a>")
         .replace(code, "<code>$1</code>")
         .replace(ib, "<b><i>$1</i></b>")
