@@ -35,8 +35,8 @@
                 console.log(user)
                 form.username.value = user.name
                 form.email.value = user.email
-                form.preview.src = user.photoURL || ""
-                form.pfp.value = user.photoURL || ""
+                form.preview.src = user.photoURL || "https://git.eggsnham.com/favicon.png"
+                form.pfp.value = user.photoURL || "https://git.eggsnham.com/favicon.png"
             }).catch((err) => {
                 location.href = "/"
             })
