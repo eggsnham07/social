@@ -7,7 +7,8 @@ export type Post = {
 export type User = {
     displayName: string | null,
     email: string,
-    uid: string
+    uid: string,
+    photoURL: string | null,
 }
 
 export type packageJson = {

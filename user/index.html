@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+        <div class="nav top" id="navbar">
+            <h2 style="text-align: center;" id="links"><a style="float:left" href="/">Home</a></h3>
+        </div>
+        <form id="user-info" style="text-align: center;">
+            <img id="preview" width="80px" height="80px"><br><br>
+            <input type="text" id="username" placeholder="Display Name" class="formInput">
+            <br>
+            <input type="text" id="email" placeholder="you@domain.com" class="formInput">
+            <br><br>
+            <input type="url" id="pfp">
+            <br><br>
+            <input type="submit" value="Update" placeholder="someurl.com/image.png">
+        </form>
+
+        <script type="module">
+            import { getCurrentUser, updateUser } from "/js/users.js"
+            const form = document.getElementById("user-info")
+            const reader = new FileReader()
+
+            getCurrentUser().then(user => {
+                console.log(user)
+                form.username.value = user.name
+                form.email.value = user.email
+                form.preview.src = user.photoURL || ""
+                form.pfp.value = user.photoURL || ""
+            }).catch((err) => {
+                location.href = "/"
+            })
+
+            form.pfp.addEventListener("input", () => {
+                form.preview.src = form.pfp.value
+            })
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault()
+                updateUser({
+                    displayName: form.username.value,
+                    email: form.email.value,
+                    photoURL: form.pfp.value
+                }).then(() => {
+                    console.log("Updated!")
+                    window.location.reload()
+                }).catch((err) => {
+                    console.error(err)
+                    alert("An error occured!")
+                })
+            })
+        </script>
+    </body>
+</html>

@@ -66,7 +66,7 @@ export function loadPost(postname) {
                                 //@ts-ignore
                                 document.getElementById("posts").innerHTML = template
                                     .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
-                                    .replace(/{{author}}/gm, post.author)
+                                    .replace(/{{author}}/gm, `${post.author}`)
                                     .replace(/{{title}}/gm, post.title)
                                     .replace(/{{content}}/gm, `${md.parse(post.content)}`)
                                     .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
@@ -148,9 +148,9 @@ export function createPost(title, body, author) {
         return new Promise((resolve, reject) => {
             const newPost = [
                 {
-                    author: author,
+                    author: `${author}`,
                     title: title,
-                    content: body
+                    content: `${body}`
                 }
             ];
             try {

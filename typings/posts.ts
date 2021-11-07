@@ -7,7 +7,7 @@ import * as md from "/js/markdown.js"
 //@ts-ignore
 import { getCurrentUser } from "/js/users.js"
 
-import { Post } from "./types"
+import { Post, User } from "./types"
 
 export async function loadAllPosts() {
     get(child(ref(db), `posts`)).then((sn:any) => {
@@ -64,7 +64,7 @@ export async function loadPost(postname:string) {
                             //@ts-ignore
                             document.getElementById("posts").innerHTML = template
                                 .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
-                                .replace(/{{author}}/gm, post.author)
+                                .replace(/{{author}}/gm, `${post.author}`)
                                 .replace(/{{title}}/gm, post.title)
                                 .replace(/{{content}}/gm, `${md.parse(post.content)}`)
                                 .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`)
@@ -146,9 +146,9 @@ export async function createPost(title:string, body:string, author:string) {
     return new Promise((resolve, reject) => {
         const newPost = [
             {
-                author: author,
+                author: `${author}`,
                 title: title,
-                content: body
+                content: `${body}`
             }
         ]
         try {

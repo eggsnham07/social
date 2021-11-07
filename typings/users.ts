@@ -42,11 +42,26 @@ export async function getCurrentUser() {
                 resolve({
                     name: user.displayName,
                     email: user.email,
-                    uid: user.uid
+                    uid: user.uid,
+                    photoURL: user.photoURL
                 })
             } else {
                 reject("Not Loggedin!")
             }
+        })
+    })
+}
+
+export async function updateUser(object:User) {
+    return new Promise((resolve, reject) => {
+        updateProfile(auth.currentUser, {
+            displayName: object.displayName,
+            email: object.email,
+            photoURL: object.photoURL
+        }).then(() => {
+            resolve(true)
+        }).catch((error:string) => {
+            reject(error)
         })
     })
 }
@@ -90,11 +105,14 @@ document.body.onload = function() {
                 onAuthStateChanged(auth, (user:User) => {
                     console.log("Logged in as ", user.displayName)
                     //@ts-ignore
-                    document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a href='javascript:window.signOutUser()'>Logout</a> <a style='float:right;margin-right:40px' href='/posts/create'>Create a post</a>"
+                    document.getElementById("links").innerHTML += `<span style='color:#33333300;'>--</span>
+                    <a style="float:left;margin-left:20px" href='javascript:window.signOutUser()'>Logout</a>
+                    <img style="margin-bottom:-10px;" width="40px" height="40px" src="${user.photoURL}"> <a href="/user/">${user.displayName}</a> 
+                    <a style='float:right;margin-right:40px' href='/posts/create'>Create a post</a>`
                 })
             } else {
                 //@ts-ignore
-                document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a href='/login/'>Login</a>"
+                document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>"
             }
         }
     })
