@@ -10,6 +10,8 @@
 
         <link rel="shortcut icon" href="https://eggsnham.com/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="/css/styles.css">
+
+        <script src="/js/index.js" type="module"></script>
         <style>
             body {
                 text-align: center;
@@ -22,15 +24,16 @@
         <div class="nav top" id="navbar">
             <h2 style="text-align: center;" id="links"><a style="float:left" href="/">Home</a></h3>
         </div>
-        <h1 id="header1"></h1>
-        <form id="login">
-            <input class="formInput" type="email" placeholder="you@domain.com" id="email" required><br><br>
-            <input class="formInput" type="password" placeholder="SuperSecretPassword" id="password" required><br><br>
-            <input class="formInput" type="submit" value="Login!">
-        </form>
-        <br><br><br>
-        <h3>Don't have an account? <a href="/signup/">Create one!</a></h3>
-
+        <div id="main">
+            <h1 id="header1"></h1>
+            <form id="login">
+                <input class="formInput" type="email" placeholder="you@domain.com" id="email" required><br><br>
+                <input class="formInput" type="password" placeholder="SuperSecretPassword" id="password" required><br><br>
+                <input class="formInput" type="submit" value="Login!">
+            </form>
+            <br><br><br>
+            <h3>Don't have an account? <a href="/signup/">Create one!</a></h3>
+        </div>
         <script>
             document.getElementById("login").addEventListener("submit", (e) => {
                 e.preventDefault()

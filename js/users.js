@@ -119,7 +119,7 @@ document.body.onload = function () {
                     //@ts-ignore
                     document.getElementById("links").innerHTML += `<span style='color:#33333300;'>--</span>
                     <a style="float:left;margin-left:20px" href='javascript:window.signOutUser()'>Logout</a>
-                    <img style="margin-bottom:-10px;" width="40px" height="40px" src="${user.photoURL}"> <a href="/user/">${user.displayName}</a> 
+                    <img style="margin-bottom:-10px;" width="40px" height="40px" src="${user.photoURL || 'https://git.eggsnham.com/favicon.png'}"> <a href="/user/">${user.displayName}</a> 
                     <a style='float:right;margin-right:40px' href='/posts/create'>Create a post</a>`;
                 });
             }
