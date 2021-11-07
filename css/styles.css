@@ -103,7 +103,8 @@ blockquote {
     margin: 0 auto;
     width: 65%;
     padding-left: 12px;
-    padding-right: 12px;    
+    padding-right: 12px;
+    overflow-y: scroll;  
 }
 
 @media screen and (max-width: 760px) {
@@ -115,6 +116,10 @@ blockquote {
         width: 65%;
         padding-left: 12px;
         padding-right: 12px;    
+    }
+
+    .full-post {
+        overflow-y: scroll;
     }
 
     html,body {
@@ -129,4 +134,5 @@ blockquote {
 #main {
     height: 100%;
     width: 100%;
+    overflow-y: scroll;
 }
