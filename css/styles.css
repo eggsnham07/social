@@ -6,7 +6,15 @@ html,body {
 }
 
 html[theme="dark-mode"] {
-    filter: invert(1) hue-rotate(100000000000000000deg)
+    filter: invert(1) hue-rotate(180deg)
+}
+
+html[theme="dark-mode"] img{
+    filter: invert(1) hue-rotate(180deg)
+}
+
+html {
+    transition: color 500ms, background-color 500ms;
 }
 
 body {
