@@ -9,12 +9,12 @@ html[theme="dark-mode"] {
     filter: invert(1) hue-rotate(180deg)
 }
 
-html[theme="dark-mode"] img{
+html[theme="dark-mode"] img {
     filter: invert(1) hue-rotate(180deg)
 }
 
 html {
-    transition: color 500ms, background-color 500ms;
+    transition: color 1s, background-color 1s;
 }
 
 body {
@@ -112,7 +112,7 @@ blockquote {
     width: 65%;
     padding-left: 12px;
     padding-right: 12px;
-    overflow-y: scroll;  
+    margin-bottom: 20px;
 }
 
 @media screen and (max-width: 760px) {
@@ -124,10 +124,6 @@ blockquote {
         width: 65%;
         padding-left: 12px;
         padding-right: 12px;    
-    }
-
-    .full-post {
-        overflow-y: scroll;
     }
 
     html,body {
