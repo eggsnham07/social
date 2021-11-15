@@ -6,6 +6,7 @@
 
         <!--CSS-->
         <link rel="stylesheet" href="/css/styles.css">
+
         <!--TODO: Add scripting here-->
     </head>
     <body>
@@ -19,7 +20,7 @@
             <div class="colorCard">
                 <p>
                     <img id="userPFP" class="pfp" src="https://git.eggsnham.com/favicon.png"> 
-                    <a id="userDisplayName"></a>
+                    <a style="text-decoration: none;color: darkcyan;" id="userDisplayName"></a>
                 </p>
             </div>
         </div>
@@ -28,22 +29,24 @@
 
         <script type="module">
             import { getCurrentUser } from "/js/users.js"
-            import { loadAllPosts } from "/js/posts.js"
+            import { loadNewPosts } from "/js/posts.js"
 
             getCurrentUser().then(user => {
                 console.log(user)
                 document.getElementById("userPFP").src = user.photoURL
                 document.getElementById("userDisplayName").innerText = user.name
                 document.getElementById("userDisplayName").href = `/user`
-                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a>`
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a><a style="float:right;margin-right: 20px;" href="">Create post</a>`
             }).catch(err => {
                 console.log("Not logged in!")
 
-                document.getElementById("ucard").style.display = "none"
+                document.getElementById("ucard").remove()
                 document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="/login">Login</a>`
             })
 
-            loadAllPosts(document.getElementById("main"))
+            loadNewPosts(document.getElementById("main")).then(() => {
+                document.getElementById("main").innerHTML += "<br><br><div style='margin:0 auto;max-width:50%;text-align:center;'><a href='/posts/'>View All</a></div>"
+            }).catch(err => document.getElementById("main").append(err))
         </script>
-    </body> 
+    </body>
 </html>

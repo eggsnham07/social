@@ -15,20 +15,44 @@
             </h4>
         </div>
 
+        <div id="ucard" class="userCard">
+            <div class="colorCard">
+                <p>
+                    <img id="userPFP" class="pfp" src="https://git.eggsnham.com/favicon.png"> 
+                    <a style="text-decoration: none;color: darkcyan;" id="userDisplayName"></a>
+                </p>
+            </div>
+        </div>
+
         <div id="main">
 
         </div>
 
         <script type="module">
-            import { loadPost } from "/js/posts.js"
+            import { loadPost, loadAllPosts } from "/js/posts.js"
+            import { getCurrentUser } from "/js/users.js"
+
+            getCurrentUser().then(user => {
+                console.log(user)
+                document.getElementById("userPFP").src = user.photoURL
+                document.getElementById("userDisplayName").innerText = user.name
+                document.getElementById("userDisplayName").href = `/user`
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a><a style="float:right;margin-right: 20px;" href="">Create post</a>`
+            }).catch(err => {
+                console.log("Not logged in!")
+
+                document.getElementById("ucard").remove()
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="/login">Login</a>`
+            })
 
             const params = new URL(location.href).searchParams
 
-            loadPost(
+            if(params.get("view")) loadPost (
                 document.getElementById("main"),
                 params.get("view").split(":")[0].replace(/%20/gm, ' '),
                 params.get("view").split(":")[1].replace(/%20/gm, ' ')
             )
+            else loadAllPosts(document.getElementById("main"))
         </script>
     </body>
 </html>

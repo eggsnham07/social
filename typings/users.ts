@@ -106,29 +106,6 @@ window.isSignedIn = async function() {
     })
 }
 
-/*
-document.body.onload = function() {
-    //@ts-ignore
-    window.isSignedIn().then(isLoggedin => {
-        if(document.getElementById("links") != null) {
-            if(isLoggedin) {
-                onAuthStateChanged(auth, (user:User) => {
-                    console.log("Logged in as ", user.displayName)
-                    //@ts-ignore
-                    document.getElementById("links").innerHTML += `<span style='color:#33333300;'>--</span>
-                    <a style="float:left;margin-left:20px" href='javascript:window.signOutUser()'>Logout</a>
-                    <img style="margin-bottom:-10px;" width="40px" height="40px" src="${user.photoURL || 'https://git.eggsnham.com/favicon.png'}"> <a href="/user/">${user.displayName}</a> 
-                    <a style='float:right;margin-right:40px' href='/posts/create'>Create a post</a>`
-                })
-            } else {
-                //@ts-ignore
-                document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>"
-            }
-        }
-    })
-}
-*/
-
 //@ts-ignore
 window.signOutUser = function() {
     signOut(auth)

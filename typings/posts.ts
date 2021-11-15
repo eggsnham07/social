@@ -5,6 +5,9 @@ import { Post } from "./types.js"
 import { db } from "./app.js"
 import * as md from "./markdown.js"
 
+export const noPosts = "No posts found... 😥"
+export const couldNot = "Could not find post... 😥"
+
 export async function loadAllPosts(element:HTMLElement) {
     return new Promise((resolve, reject) => {
         get(child(ref(db), "posts")).then((sn:any) => {
@@ -20,15 +23,42 @@ export async function loadAllPosts(element:HTMLElement) {
 
                     element.appendChild(postDiv)
                 })
+                resolve(true)
             } else {
-                reject("No posts found 😥")
+                reject(noPosts)
             }
         })
     })
 }
 
-export async function loadNewPosts() {
+export async function loadNewPosts(element:HTMLElement) {
+    return new Promise((resolve, reject) => {
+        const maxLoad = 5
+        var count = -1
 
+        get(child(ref(db), "posts")).then((sn:any) => {
+            if(sn.exists()) {
+                sn.val().forEach((post:Post) => {
+                    if(count == maxLoad) resolve(true)
+
+                    count++
+                    const postDiv = document.createElement("div")
+
+                    postDiv.className = "post"
+                    postDiv.innerHTML = `<h3 style="text-align: left">${post.author}</h3>
+                    <h1 style="text-align:center">${post.title}</h1>
+                    <br><br>
+                    <a style="text-align:center" href="/posts?view=${post.author.replace(/\s/gm, '%20')}:${post.title.replace(/\s/gm, '%20')}">Read</a>`
+
+                    element.appendChild(postDiv)
+                })
+
+                resolve(true)
+            } else {
+                reject(noPosts)
+            }
+        })
+    })
 }
 
 export async function loadPost(element:HTMLElement, author:string, postTitle:string) {
@@ -58,11 +88,11 @@ export async function loadPost(element:HTMLElement, author:string, postTitle:str
                     }
 
                     if(isFound == false && count == sn.val().length) {
-                        reject("Could not find post 😥")
+                        reject(couldNot)
                     }
                 })
             } else {
-                reject("Could not find post 😥")
+                reject(couldNot)
             }
         })
     })
