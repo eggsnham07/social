@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--MetaData-->
+        <!--CSS-->
+        <link rel="stylesheet" href="/css/styles.css">
+        <style id="style">
+            .formInput {
+                height: 26px;
+                font-size: 22px;
+            }
+
+            .formInput[type=submit] {
+                height: 26px;
+                font-size: 18px;
+            }
+
+            body {
+                text-align: center;
+            }
+        </style>
+        <!--Script-->
+        <script type="module" src="/js/users.js"></script>
+
+    </head>
+    <body>
+        <div class="top nav">
+            <h4 style="text-align: left;" id="links">
+                <a href="/">Home</a>
+            </h4>
+        </div>
+        <form id="update">
+            <img id="pfp" src="https://git.eggsnham.com/favicon.png" width="80" height="80"><br><br>
+            <input type="text" placeholder="Username" id="username" class="formInput"><br>
+            <input type="email" placeholder="you@domain.com" id="email" class="formInput"><br>
+            <input type="url" placeholder="URL to png" id="pfpUrl" class="formInput"><br><br>
+            <input type="submit" value="Update!">
+        </form>
+
+        <script type="module">
+            import { updateUser } from "/js/users.js"
+
+            const uname = document.getElementById("username"),
+                    email = document.getElementById("email"),
+                    pfpUrl = document.getElementById("pfpUrl")
+
+            getCurrentUser().then((user) => {
+                if(!user) {
+                    location.href = "/"
+                    console.log("Not logged in!")
+
+                    document.getElementById("ucard").style.display = "none"
+                    document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="/login">Login</a>`
+                }
+
+                uname.value = user.name
+                email.value = user.email
+                pfpUrl.value = user.photoURL
+                console.log(user)
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a>`
+                document.getElementById("pfp").src = user.photoURL
+            })
+
+            document.getElementById("update").addEventListener("submit", (e) => {
+                e.preventDefault()
+
+                updateUser({
+                    displayName: uname.value,
+                    email: email.value,
+                    photoURL: pfpUrl.value
+                }).then(() => {
+                    alert("Profile updated!")
+                    location.href = "/"
+                }).catch((err) => {
+                    alert(err)
+                })
+            })
+        </script>
+    </body>
+</html>

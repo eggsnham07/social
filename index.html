@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html prefix="og: https://ogp.me/ns#">
+    <head>
+        <!--TODO: Add meta data and title-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--CSS-->
+        <link rel="stylesheet" href="/css/styles.css">
+        <!--TODO: Add scripting here-->
+    </head>
+    <body>
+        <div class="top nav">
+            <h4 id="links">
+                <a href="/">Home</a>
+            </h4>
+        </div>
+
+        <div id="ucard" class="userCard">
+            <div class="colorCard">
+                <p>
+                    <img id="userPFP" class="pfp" src="https://git.eggsnham.com/favicon.png"> 
+                    <a id="userDisplayName"></a>
+                </p>
+            </div>
+        </div>
+
+        <div id="main"></div>
+
+        <script type="module">
+            import { getCurrentUser } from "/js/users.js"
+            import { loadAllPosts } from "/js/posts.js"
+
+            getCurrentUser().then(user => {
+                console.log(user)
+                document.getElementById("userPFP").src = user.photoURL
+                document.getElementById("userDisplayName").innerText = user.name
+                document.getElementById("userDisplayName").href = `/user`
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a>`
+            }).catch(err => {
+                console.log("Not logged in!")
+
+                document.getElementById("ucard").style.display = "none"
+                document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="/login">Login</a>`
+            })
+
+            loadAllPosts(document.getElementById("main"))
+        </script>
+    </body>
+</html>

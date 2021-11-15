@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--TODO: Add title and meta data-->
+
+        <!--CSS-->
+        <link rel="stylesheet" href="/css/styles.css">
+
+        <!--Any header scripting-->
+    </head>
+    <body>
+        <div class="top nav">
+            <h4 id="links">
+                <a href="/">Home</a>
+            </h4>
+        </div>
+
+        <div id="main">
+
+        </div>
+
+        <script type="module">
+            import { loadPost } from "/js/posts.js"
+
+            const params = new URL(location.href).searchParams
+
+            loadPost(
+                document.getElementById("main"),
+                params.get("view").split(":")[0].replace(/%20/gm, ' '),
+                params.get("view").split(":")[1].replace(/%20/gm, ' ')
+            )
+        </script>
+    </body>
+</html>
