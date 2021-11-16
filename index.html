@@ -23,6 +23,8 @@
                     <a style="text-decoration: none;color: darkcyan;" id="userDisplayName"></a>
                 </p>
             </div>
+            <br>
+            <h4 id="isDev"></h4>
         </div>
 
         <div id="main"></div>
@@ -36,6 +38,7 @@
                 document.getElementById("userPFP").src = user.photoURL
                 document.getElementById("userDisplayName").innerText = user.name
                 document.getElementById("userDisplayName").href = `/user`
+                if(user.data.officialDev) document.getElementById("isDev").innerText = "Official Developer"
                 document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a><a style="float:right;margin-right: 20px;" href="">Create post</a>`
             }).catch(err => {
                 console.log("Not logged in!")

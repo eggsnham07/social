@@ -22,11 +22,11 @@
                     <a style="text-decoration: none;color: darkcyan;" id="userDisplayName"></a>
                 </p>
             </div>
+            <br>
+            <h4 id="isDev"></h4>
         </div>
 
-        <div id="main">
-
-        </div>
+        <div id="main"></div>
 
         <script type="module">
             import { loadPost, loadAllPosts } from "/js/posts.js"
@@ -38,8 +38,9 @@
                 document.getElementById("userDisplayName").innerText = user.name
                 document.getElementById("userDisplayName").href = `/user`
                 document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="javascript:signOutUser()">Logout</a><a style="float:right;margin-right: 20px;" href="">Create post</a>`
+                if(user.data.officialDev) document.getElementById("isDev").innerText = "Official Developer"
             }).catch(err => {
-                console.log("Not logged in!")
+                console.log("Not logged in!", err)
 
                 document.getElementById("ucard").remove()
                 document.getElementById("links").innerHTML += `<span class="blank">--</span><a href="/login">Login</a>`

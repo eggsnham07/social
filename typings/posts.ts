@@ -79,8 +79,10 @@ export async function loadPost(element:HTMLElement, author:string, postTitle:str
                         const postDiv = document.createElement("div")
 
                         postDiv.className = "post"
+                        postDiv.style.textAlign = "left"
                         postDiv.innerHTML = `<h3 style="text-align: left">${post.author}</h3>
                         <h1 style="text-align:center">${post.title}</h1>
+                        <hr>
                         <br><br>
                         <div>${md.parse(post.content)}</div>`
     

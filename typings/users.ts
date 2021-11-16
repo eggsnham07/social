@@ -1,7 +1,7 @@
 //@ts-ignore
 import {  createUserWithEmailAndPassword,  signInWithEmailAndPassword, onAuthStateChanged,  updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"
 //@ts-ignore
-import { set, child, ref} from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"
+import { set, child, ref, get} from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"
 
 import { auth, db } from "./app.js"
 import { User } from "./types.js"
@@ -42,11 +42,14 @@ export async function getCurrentUser() {
     return new Promise((resolve, reject) => {
         onAuthStateChanged(auth, (user:User) => {
             if(user) {
-                resolve({
-                    name: user.displayName,
-                    email: user.email,
-                    uid: user.uid,
-                    photoURL: user.photoURL
+                get(child(ref(db), `users/${user.uid}`)).then((data:any) => {
+                    resolve({
+                        name: user.displayName,
+                        email: user.email,
+                        uid: user.uid,
+                        photoURL: user.photoURL,
+                        data: data.val()
+                    })
                 })
             } else {
                 reject("Not Loggedin!")
@@ -78,7 +81,7 @@ window.signInUser = function(email, password) {
                     updateProfile(auth.currentUser, {
                         displayName: localStorage.getItem("user-info")
                     }).then(() => {
-                        set(ref(db, `users/${cred.uid}`), {
+                        set(ref(db, `users/${cred.user.uid}`), {
                             username: localStorage.getItem("user-info"),
                             email: email,
                             officialDev: false
