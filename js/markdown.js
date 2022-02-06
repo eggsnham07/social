@@ -1,3 +1,11 @@
+function get(url) {
+    const req = new XMLHttpRequest();
+    req.open("GET", url);
+    req.onload = function () {
+        return (req.responseText);
+    };
+    req.send();
+}
 const h1 = /^#\s(.*$)/gm;
 const h2 = /^##\s(.*$)/gm;
 const h3 = /^###\s(.*$)/gm;
@@ -19,36 +27,6 @@ const youtube = /https:\/\/www.youtube.com\/watch\?v=(.*$)/gm;
  * @param {String} str
  */
 export function parse(str) {
-    const style = {
-        iframe: `border-radius: 20px;
-        margin: 0 auto;
-        width: 100%;
-        height: 250px;`,
-        card: `font-family: Arial, Helvetica, sans-serif;
-        border: 3px solid #333;
-        border-radius: 20px;
-        min-height: 300px;
-        width: 25%;
-        margin: 0 auto;
-        padding: 12px;`
-    };
-    var data;
-    //@ts-ignore
-    if (str.includes("https://www.youtube.com") && typeof $ !== "undefined") {
-        var url = str.match(youtube);
-        //@ts-ignore
-        if ((url === null || url === void 0 ? void 0 : url.length) > 0) {
-            //@ts-ignore
-            $.getJSON("https://noembed.com/embed", {
-                format: "json",
-                //@ts-ignore
-                url: url[0]
-            }, function (d) {
-                data = d;
-                console.log("Working...");
-            });
-        }
-    }
     return str
         .replace(h1, "<h1 id=\'$1\'>$1</h1><hr>")
         .replace(h2, "<h2 id=\'$1\'>$1</h2>")
@@ -65,5 +43,7 @@ export function parse(str) {
         .replace(ib, "<b><i>$1</i></b>")
         .replace(bold, "<b>$1</b>")
         .replace(italic, "<i>$1</i>")
-        .replace(bq, "<blockquote>$1</blockquote>");
+        .replace(bq, "<blockquote>$1</blockquote>")
+        //@ts-ignore
+        .replace(youtube, `<iframe style="width:70%;height:350px;margin: 0 auto;display:block;border: 3px solid #FF0000;border-radius: 10px;" src="https://www.youtube.com/embed/$1" frameborder="0"allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
 }

@@ -15,6 +15,15 @@ type VideoData = {
     width: string
 }
 
+function get(url:string) {
+    const req = new XMLHttpRequest()
+    req.open("GET", url)
+    req.onload = function() {
+        return(req.responseText)
+    }
+    req.send()
+}
+
 const h1 = /^#\s(.*$)/gm
 const h2 = /^##\s(.*$)/gm
 const h3 = /^###\s(.*$)/gm
@@ -58,4 +67,6 @@ export function parse(str:string): string {
         .replace(bold, "<b>$1</b>")
         .replace(italic, "<i>$1</i>")
         .replace(bq, "<blockquote>$1</blockquote>")
+        //@ts-ignore
+        .replace(youtube, `<iframe style="width:70%;height:350px;margin: 0 auto;display:block;border: 3px solid #FF0000;border-radius: 10px;" src="https://www.youtube.com/embed/$1" frameborder="0"allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
 }
