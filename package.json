@@ -4,9 +4,12 @@
   "main": "none",
   "repository": "https://github.com/eggsnham07/social.git",
   "scripts": {
-    "build": "tsc"
+    "build": "./node_modules/typescript/bin/tsc"
   },
   "author": "eggsnham07 <eggsnham07@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "typescript": "^5.0.4"
+  }
 }
