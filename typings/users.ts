@@ -1,8 +1,7 @@
 //@ts-ignore
 import {  createUserWithEmailAndPassword,  signInWithEmailAndPassword, onAuthStateChanged,  updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"
-//@ts-ignore
-import { auth } from "/js/app.js"
-import { User } from "./types"
+import { auth } from "./app.js";
+import { User } from "./types";
 
 export const createUser = function(username:string, email:string, password:string) {
     return new Promise((resolve, reject) => {
@@ -35,11 +34,12 @@ window.getCurrentUser = function() {
 }
 
 //@ts-ignore
-export async function getCurrentUser() {
-    return new Promise((resolve, reject) => {
+export async function getCurrentUser(): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
         onAuthStateChanged(auth, (user:User) => {
             if(user) {
                 resolve({
+                    //@ts-ignore
                     name: user.displayName,
                     email: user.email,
                     uid: user.uid,
@@ -115,11 +115,13 @@ document.body.onload = function() {
                 document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>"
             }
         }
-    })
+    }).catch((_:Error) => {});
 }
 
 //@ts-ignore
 window.signOutUser = function() {
-    signOut(auth)
+    signOut(auth);
+    //@ts-ignore
+    window.cacheSystem.use.userdata = null;
     location.reload()
 }

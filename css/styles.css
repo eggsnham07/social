@@ -49,7 +49,7 @@ blockquote {
     width: calc(100% - 24px);
     background-color: #333;
     color: #eee;
-    height: 100px;
+    height: 75px;
 }
 
 .nav a {
@@ -64,6 +64,10 @@ blockquote {
     position: fixed;
     top: 0;
     left: 0;
+}
+
+.nav.top h2{
+    font-size: 25px;
 }
 
 .formInput {
@@ -110,8 +114,8 @@ blockquote {
     border-radius: 20px;
     margin: 0 auto;
     width: 65%;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
     margin-bottom: 20px;
 }
 

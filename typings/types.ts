@@ -20,3 +20,8 @@ export type packageJson = {
     private: boolean,
     main: string
 }
+
+export type SnapShot = {
+    exists:Function;
+    val:   Function;
+}

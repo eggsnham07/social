@@ -20,11 +20,11 @@
         <div id="main">
             <form id="user-info" style="text-align: center;">
                 <img id="preview" width="80px" height="80px"><br><br>
-                <input type="text" id="username" placeholder="Display Name" class="formInput">
-                <br>
-                <input type="text" id="email" placeholder="you@domain.com" class="formInput">
+                <label>Username</label><br><input type="text" id="username" placeholder="Display Name" class="formInput">
                 <br><br>
-                <input type="url" id="pfp" class="formInput">
+                <label>E-Mail Address</label><br><input type="text" id="email" placeholder="you@domain.com" class="formInput">
+                <br><br>
+                <label>Profile Picture URL</label><br><input type="url" id="pfp" class="formInput">
                 <br><br>
                 <input type="submit" value="Update" class="formInput">
             </form>
@@ -33,10 +33,13 @@
 
         <script type="module">
             import { getCurrentUser, updateUser } from "/js/users.js"
+            import { CacheSystem } from "/js/cache.js"
             const form = document.getElementById("user-info")
             const reader = new FileReader()
 
-            getCurrentUser().then(user => {
+            const cache = new CacheSystem();
+
+            cache.getUser().then(user => {
                 console.log(user)
                 form.username.value = user.name
                 form.email.value = user.email
@@ -52,6 +55,11 @@
 
             form.addEventListener("submit", (e) => {
                 e.preventDefault()
+                cache.cacheUser({
+                    displayName: form.username.value,
+                    email: form.email.value,
+                    photoURL: form.pfp.value
+                })
                 updateUser({
                     displayName: form.username.value,
                     email: form.email.value,

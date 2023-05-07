@@ -7,6 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { CacheSystem } from "./cache.js";
+//@ts-ignore
+window.cacheSystem = new CacheSystem();
 function getJSON(url) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
@@ -60,4 +63,3 @@ window.toggleTheme = function () {
         localStorage.setItem("mode", "light");
     }
 };
-export {};

@@ -9,8 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 //@ts-ignore
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
-//@ts-ignore
-import { auth } from "/js/app.js";
+import { auth } from "./app.js";
 export const createUser = function (username, email, password) {
     return new Promise((resolve, reject) => {
         createUserWithEmailAndPassword(auth, email, password)
@@ -47,6 +46,7 @@ export function getCurrentUser() {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     resolve({
+                        //@ts-ignore
                         name: user.displayName,
                         email: user.email,
                         uid: user.uid,
@@ -128,10 +128,12 @@ document.body.onload = function () {
                 document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>";
             }
         }
-    });
+    }).catch((_) => { });
 };
 //@ts-ignore
 window.signOutUser = function () {
     signOut(auth);
+    //@ts-ignore
+    window.cacheSystem.use.userdata = null;
     location.reload();
 };

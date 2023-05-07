@@ -9,12 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 //@ts-ignore
 import { ref, child, set, get } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
-//@ts-ignore
-import { db } from "/js/app.js";
-//@ts-ignore
-import * as md from "/js/markdown.js";
-//@ts-ignore
-import { getCurrentUser } from "/js/users.js";
+import { CacheSystem } from "./cache.js";
+import * as md from "./markdown.js";
+import { db } from "./app.js";
+const cache = new CacheSystem();
 export function loadAllPosts() {
     return __awaiter(this, void 0, void 0, function* () {
         get(child(ref(db), `posts`)).then((sn) => {
@@ -23,6 +21,7 @@ export function loadAllPosts() {
                 document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>";
                 return;
             }
+            cache.use.postCache = sn.val();
             var template = "";
             const req = new XMLHttpRequest();
             req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/post.html`);
@@ -42,105 +41,73 @@ export function loadAllPosts() {
 }
 export function loadPost(postname) {
     return __awaiter(this, void 0, void 0, function* () {
-        get(child(ref(db), "posts")).then((sn) => {
-            if (!sn.exists()) {
-                //@ts-ignore
-                document.getElementById("posts").innerHTML = "<h3 style='text-align:center;'>No posts to show... 😟</h3>";
-                return;
-            }
-            var template = "";
-            const req = new XMLHttpRequest();
-            req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/full-post.html`);
-            req.send();
-            req.onload = function () {
-                template = req.responseText;
-                var count = 0;
-                var isFound = false;
-                sn.val().forEach((post) => {
-                    var _a;
-                    count++;
-                    const found = `${post.author}:${post.title}`;
-                    if (found == postname) {
-                        getCurrentUser().then((user) => {
-                            if (user.name != post.author) {
-                                //@ts-ignore
-                                document.getElementById("posts").innerHTML = template
-                                    .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
-                                    .replace(/{{author}}/gm, `${post.author}`)
-                                    .replace(/{{title}}/gm, post.title)
-                                    .replace(/{{content}}/gm, `${md.parse(post.content)}`)
-                                    .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
-                            }
-                            else if (user.name == post.author) {
-                                //@ts-ignore
-                                document.getElementById("posts").innerHTML = template
-                                    .replace(/{{author}}/gm, post.author)
-                                    .replace(/{{title}}/gm, post.title)
-                                    .replace(/{{content}}/gm, `${md.parse(post.content)}`)
-                                    .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
-                            }
-                            isFound = true;
-                        }).catch((err) => {
+        var template = "";
+        console.log(postname);
+        const req = new XMLHttpRequest();
+        req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/full-post.html`);
+        req.send();
+        req.onload = function () {
+            template = req.responseText;
+            var count = 0;
+            cache.getPost(postname.split(":")[1]).then((post) => {
+                count++;
+                const found = `${post.author}:${post.title}`;
+                if (found == postname) {
+                    cache.getUser().then((user) => {
+                        if (user.name != post.author) {
                             //@ts-ignore
                             document.getElementById("posts").innerHTML = template
                                 .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
+                                .replace(/{{author}}/gm, `${post.author}`)
+                                .replace(/{{title}}/gm, post.title)
+                                .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                                .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
+                        }
+                        else if (user.name == post.author) {
+                            //@ts-ignore
+                            document.getElementById("posts").innerHTML = template
                                 .replace(/{{author}}/gm, post.author)
                                 .replace(/{{title}}/gm, post.title)
                                 .replace(/{{content}}/gm, `${md.parse(post.content)}`)
                                 .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
-                        });
-                    }
-                    else if (found != postname && count == sn.val().length && isFound == false)
+                        }
+                    }).catch((err) => {
                         //@ts-ignore
-                        (_a = document.getElementById("posts")) === null || _a === void 0 ? void 0 : _a.innerHTML = `<h3 style='text-align:center;'>No posts found... 😟</h3>`;
-                });
-            };
-        });
+                        document.getElementById("posts").innerHTML = template
+                            .replace(/<h3 style="float:right"><a href="(.*?)">Edit<\/a><\/h3>/gm, '')
+                            .replace(/{{author}}/gm, post.author)
+                            .replace(/{{title}}/gm, post.title)
+                            .replace(/{{content}}/gm, `${md.parse(post.content)}`)
+                            .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/ /gm, "%20")}`);
+                    });
+                }
+            });
+        };
     });
 }
 export function loadNewPosts() {
     return __awaiter(this, void 0, void 0, function* () {
-        get(child(ref(db), "posts")).then((sn) => {
-            if (!sn.exists()) {
-                var mo = "";
-                //@ts-ignore
-                window.getCurrentUser().then(user => {
+        var template = "";
+        var count = 0;
+        const req = new XMLHttpRequest();
+        req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/post.html`);
+        req.send();
+        req.onload = function () {
+            template = req.responseText;
+            cache.use.postCache.forEach((post) => {
+                count++;
+                if (count <= 2) {
                     //@ts-ignore
-                    document.getElementById("posts").style.textAlign = "center";
-                    if (user.name)
-                        mo = "<a style='text-align:center;' href='/posts/create'>Make one!</a>";
-                    //@ts-ignore
-                    document.getElementById("posts").innerHTML = `<h3 style='text-align:center;'>No posts to show... 😟</h3>${mo}`;
+                    document.getElementById("posts").innerHTML += template
+                        .replace(/{{author}}/gm, post.author)
+                        .replace(/{{title}}/gm, post.title)
+                        .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/\s/gm, "%20")}`);
+                }
+                else if (count >= 2) {
                     return;
-                }).catch((err) => {
-                    //@ts-ignore
-                    document.getElementById("posts").innerHTML = `<h3 style='text-align:center;'>No posts to show... 😟</h3>`;
-                });
-            }
-            else {
-                var template = "";
-                var count = 0;
-                const req = new XMLHttpRequest();
-                req.open("GET", `${location.protocol}//${location.href.split("/")[2]}/templates/post.html`);
-                req.send();
-                req.onload = function () {
-                    template = req.responseText;
-                    sn.val().forEach((post) => {
-                        count++;
-                        if (count <= 2) {
-                            //@ts-ignore
-                            document.getElementById("posts").innerHTML += template
-                                .replace(/{{author}}/gm, post.author)
-                                .replace(/{{title}}/gm, post.title)
-                                .replace(/{{post-slug}}/gm, `${post.author}:${post.title.replace(/\s/gm, "%20")}`);
-                        }
-                        else if (count >= 2) {
-                            return;
-                        }
-                    });
-                };
-            }
-        });
+                }
+            });
+        };
     });
 }
 export function createPost(title, body, author) {
@@ -156,9 +123,9 @@ export function createPost(title, body, author) {
             try {
                 get(child(ref(db), "posts")).then((sn) => {
                     const total = newPost.concat(sn.val());
-                    console.log(total);
                     set(child(ref(db), "posts"), total);
                     resolve(void (0));
+                    cache.cachePost(newPost[0]);
                 });
             }
             catch (error) {
@@ -198,14 +165,45 @@ export function updatePost(oldTitle, title, body, author) {
         });
     });
 }
+export function loadPostData(title) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            get(child(ref(db), "posts")).then((sn) => {
+                if (!sn.exists()) {
+                    reject(404);
+                    return;
+                }
+                ;
+                sn.val().forEach((post) => {
+                    if (post.title == title) {
+                        resolve(post);
+                        return;
+                    }
+                });
+            });
+        });
+    });
+}
+export function loadAllPostsData() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            get(child(ref(db), "posts")).then((snap) => {
+                if (!snap.exists()) {
+                    reject("No posts");
+                    return;
+                }
+                resolve(snap.val());
+            });
+        });
+    });
+}
 //@ts-ignore
 window.loadPostData = function (author, title) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             get(child(ref(db), "posts")).then((sn) => {
                 if (!sn.exists()) {
-                    console.log("<h3 style='text-align:center;'>Could not find post... 😟</h3>");
-                    return;
+                    reject("<h3 style='text-align:center;'>Could not find post... 😟</h3>");
                 }
                 var count = 0;
                 var isFound = false;

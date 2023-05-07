@@ -1,4 +1,8 @@
-import { packageJson } from "./types"
+import { packageJson } from "./types";
+import { CacheSystem } from "./cache.js";
+
+//@ts-ignore
+window.cacheSystem = new CacheSystem();
 
 async function getJSON(url:string): Promise<Object> {
     return new Promise<Object>((resolve, reject) => {
