@@ -154,31 +154,29 @@ export async function updatePost(oldTitle:string, title:string, body:string, aut
         //    return;
         //}
         getDocs(collection(db, "prod")).then((d:any) => {
+            d.forEach((c:any) => {
+                if(c.id == "posts") {
+                    var count = 0
+                    var isFound = false
+                    var col = c.data().collection;
 
-            for(const c of d.data()) {
-                if(c.id != "posts") continue;
-                var count = 0
-                var isFound = false
-                var fd;
-                var nd;
-                var col = c.data().collection;
+                    col.forEach(async (post:Post) => {
+                        count++
 
-                col.forEach(async (post:Post) => {
-                    count++
+                        const found = `${post.author}:${post.title}`
+                        if(found == `${author}:${oldTitle}`) {
+                            col.splice(col.indexOf(post), 1);
+                            await createPost(title, body, author);
+                            resolve(200);
+                        }
 
-                    const found = `${post.author}:${post.title}`
-                    if(found == `${author}:${oldTitle}`) {
-                        col.splice(col.indexOf(post), 1);
-                        await createPost(title, body, author);
-                        resolve(200);
-                    }
-
-                    else if(found != `${author}:${oldTitle}` && count == c.data().collection.length && isFound == false) {      
-                        alert(`Could not edit post... 😟`)
-                        reject(404)
-                    }
-                })
-            }
+                        else if(found != `${author}:${oldTitle}` && count == c.data().collection.length && isFound == false) {      
+                            alert(`Could not edit post... 😟`)
+                            reject(404)
+                        }
+                    })
+                }
+            })
         })
     })
 }
@@ -192,6 +190,7 @@ export async function loadPostData(title:string): Promise<Post> {
             var f = false;
             var c = 0;
             for(const p of col) {
+                console.debug(p, title, p.title == title);
                 c++;
                 if(p.title == title) {
                     f = true;

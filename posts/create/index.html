@@ -31,7 +31,10 @@
 
         <script type="module">
             import * as md from "/js/markdown.js"
-            import { createPost, updatePost, loadPostData } from "/js/posts.js"
+            import { createPost, updatePost, loadPostData } from "/js/posts.js";
+            import { CacheSystem } from "/js/cache.js";
+
+            const cache = new CacheSystem();
 
             isSignedIn().then(loggedIn => {
                 if(loggedIn == false) location.href = "/"
@@ -74,15 +77,16 @@
                 information.postName = params.get("edit").split(":")[1].replace(/%20/gm, ' ')
                 console.log(information)
 
-                getCurrentUser().then(user => {
-                    loadPostData(user.name, information.postName).then(post => {
+                cache.getUser().then(user => {
+                    cache.getPost(information.postName).then(post => {
                         content.value = post.content
                         title.value = information.postName
 
                         document.getElementById("preview").innerHTML = md.parse(content.value)
                     }).catch(_e => {
+                        console.warn(_e);
                         alert("404 Post not found!");
-                        location.href = "/";
+                        if(!location.href.includes("localhost")) location.href = "/";
                     })
                 })
 
@@ -93,7 +97,7 @@
                     } else {
                         e.preventDefault()
 
-                        getCurrentUser().then(data => {
+                        cache.getUser().then(data => {
                             updatePost(
                                 information.postName,
                                 title.value,
