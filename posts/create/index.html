@@ -31,7 +31,7 @@
 
         <script type="module">
             import * as md from "/js/markdown.js"
-            import { createPost, updatePost } from "/js/posts.js"
+            import { createPost, updatePost, loadPostData } from "/js/posts.js"
 
             isSignedIn().then(loggedIn => {
                 if(loggedIn == false) location.href = "/"
@@ -54,7 +54,7 @@
                 document.getElementById("create").addEventListener("submit", (e) => {
                     if(String(title.value).includes(":") || String(title.value).includes("\"") || String(title.value).includes("'")) {
                         e.preventDefault()
-                        alert("Title cannot contain : ' \" ")
+                        alert("Title cannot contain [:, ', \"] ")
                     } else {
                         e.preventDefault()
 
@@ -80,6 +80,9 @@
                         title.value = information.postName
 
                         document.getElementById("preview").innerHTML = md.parse(content.value)
+                    }).catch(_e => {
+                        alert("404 Post not found!");
+                        location.href = "/";
                     })
                 })
 

@@ -16,14 +16,17 @@ export class CacheSystem {
         if(use.postCache != undefined) this.use.postCache = JSON.parse(use.postCache);
         if(this.use.postCache.length == 0) {
             console.log("Creating post cache...")
+            //@ts-ignore
             loadAPD().then((posts:Array<Post>) => {
                 this.use.postCache = posts;
-                if(this.use.postCache.length > 1) location.reload();
+                location.reload();
             }) 
         }
         if(use.userdata != undefined) this.use.userdata = JSON.parse(use.userdata);
         if(use.cacheDate != undefined) this.use.cacheDate = use.cacheDate;
         window.addEventListener("beforeunload", async _ => {
+            //@ts-ignore
+            if(globalThis.delete_cache) return;
             use.postCache = JSON.stringify(this.use.postCache);
             use.userdata = JSON.stringify(this.use.userdata);
         })
@@ -37,11 +40,7 @@ export class CacheSystem {
     async getUser(): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             if(this.use.userdata == undefined || this.use.cacheDate != new Date().getDay()) {
-                try {
-                    getCurrentUser().then(user => {this.cacheUser(user); resolve(user);});
-                } catch(_e) {
-                    reject(_e);
-                }
+                getCurrentUser().then(user => {this.cacheUser(user); resolve(user);}).catch(_ => {reject("Nope")});
             } else {
                 console.log("Loaded user from cache");
                 resolve(this.use.userdata);
@@ -52,6 +51,7 @@ export class CacheSystem {
     async getPost(title:string, forceNoCache:boolean=false): Promise<Post> {
         return new Promise<Post>((resolve, reject) => {
             if(forceNoCache || this.use.postCache == undefined || this.use.cacheDate != new Date().getDay()) {
+                //@ts-ignore
                 loadPD(title).then(post => {
                     this.cachePost(post);
                     resolve(post);

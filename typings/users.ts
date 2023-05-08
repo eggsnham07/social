@@ -1,5 +1,5 @@
 //@ts-ignore
-import {  createUserWithEmailAndPassword,  signInWithEmailAndPassword, onAuthStateChanged,  updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"
+import {  createUserWithEmailAndPassword,  signInWithEmailAndPassword, onAuthStateChanged,  updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js"
 import { auth } from "./app.js";
 import { User } from "./types";
 
@@ -91,8 +91,8 @@ window.signInUser = function(email, password) {
 window.isSignedIn = async function() {
     return new Promise((resolve) => {
         onAuthStateChanged(auth, (user:User) => {
-            if(user) resolve(true)
-            else resolve(false)
+            if(user) resolve(true);
+            else resolve(false);
         })
     })
 }
@@ -103,6 +103,11 @@ document.body.onload = function() {
         if(document.getElementById("links") != null) {
             if(isLoggedin) {
                 onAuthStateChanged(auth, (user:User) => {
+                    if(user == null) {
+                        //@ts-ignore
+                        document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>";
+                        return;
+                    };
                     console.log("Logged in as ", user.displayName)
                     //@ts-ignore
                     document.getElementById("links").innerHTML += `<span style='color:#33333300;'>--</span>
@@ -112,10 +117,10 @@ document.body.onload = function() {
                 })
             } else {
                 //@ts-ignore
-                document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>"
+                document.getElementById("links").innerHTML += "<span style='color:#33333300;'>--</span><a style='float:left;margin-left:20px;' href='/login/'>Login</a>";
             }
         }
-    }).catch((_:Error) => {});
+    });
 }
 
 //@ts-ignore

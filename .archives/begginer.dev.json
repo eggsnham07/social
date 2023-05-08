@@ -1,9 +1,0 @@
-{
-    "posts": [
-        {
-            "title": "Release V1.2.8",
-            "content": "# Release Version 1.2.8 Beta!\n### New features:\n- Scripting language converted to [TypeScript](http://typescriptlang.org)\n\n\n\n\n\n<small>`V1.2.8 Beta`</small>",
-            "author": "eggsndev"
-        }
-    ]
-}
