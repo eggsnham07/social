@@ -166,6 +166,8 @@ export async function updatePost(oldTitle:string, title:string, body:string, aut
                         const found = `${post.author}:${post.title}`
                         if(found == `${author}:${oldTitle}`) {
                             col.splice(col.indexOf(post), 1);
+                            console.debug(col.indexOf(post));
+                            await setDoc(doc(db, "prod", "posts"), {collection: col});
                             await createPost(title, body, author);
                             resolve(200);
                         }
